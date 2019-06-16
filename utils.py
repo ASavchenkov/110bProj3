@@ -10,7 +10,7 @@ from torchvision import datasets, utils
 
 #hyper params
 num_epochs = 3
-batch_size = 8
+batch_size = 32
 learning_rate = 0.0001
 beta = 1
 
