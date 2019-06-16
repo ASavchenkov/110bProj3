@@ -9,8 +9,8 @@ from torch.autograd import Variable
 from torchvision import datasets, utils
 
 #hyper params
-num_epochs = 3
-batch_size = 32
+num_epochs = 10
+batch_size = 16
 learning_rate = 0.001
 beta = 1
 
@@ -53,11 +53,11 @@ def imshow(img, idx, learning_rate, beta):
     plt.show()
     return
 
-def gaussian(tensor, mean=0, stddev=0.1, gpu = True):
+def gaussian(tensor, mean=0, stddev=0.1):
     '''Adds random noise to a tensor.'''
     
     noise = torch.nn.init.normal(torch.Tensor(tensor.size()), 0, 0.1)
-    if gpu: noise = noise.cuda()
+    if tensor.is_cuda: noise = noise.cuda()
     return Variable(tensor + noise)
 
 
@@ -80,7 +80,7 @@ test_loader = torch.utils.data.DataLoader(
         datasets.ImageFolder(
         TEST_PATH, 
         transforms.Compose([
-        transforms.RandomResizedCrop(128, scale=1, ratio=1),
+        transforms.RandomResizedCrop(128, scale=(1,1), ratio=(1,1)),
         transforms.ToTensor(),
         transforms.Normalize(mean=mean,
         std=std)
