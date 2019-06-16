@@ -11,7 +11,7 @@ from torchvision import datasets, utils
 #hyper params
 num_epochs = 3
 batch_size = 32
-learning_rate = 0.0001
+learning_rate = 0.001
 beta = 1
 
 #these are pretty close for pretty much any image library
