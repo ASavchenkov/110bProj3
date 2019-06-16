@@ -3,12 +3,12 @@ import numpy as np
 
 import torch
 import torch.optim as optim
-from torch.Autograd import Variable
+from torch.autograd import Variable
 
 from utils import *
 from model import Net
 
-net = Net()
+net = Net().cuda()
 
 MODELS_PATH = './models/'
 if not os.path.exists(MODELS_PATH): os.mkdir(MODELS_PATH)
@@ -30,6 +30,7 @@ def train_model(train_loader, beta, learning_rate):
         for idx, train_batch in enumerate(train_loader):
 
             data, _  = train_batch
+            data = data.cuda()
 
             # Saves secret images and secret covers
             train_covers = data[:len(data)//2]
@@ -38,7 +39,6 @@ def train_model(train_loader, beta, learning_rate):
             # Creates variable from secret and cover images
             train_secrets = Variable(train_secrets, requires_grad=False)
             train_covers = Variable(train_covers, requires_grad=False)
-
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             train_hidden, train_output = net(train_secrets, train_covers)
@@ -49,11 +49,11 @@ def train_model(train_loader, beta, learning_rate):
             optimizer.step()
             
             # Saves training loss
-            train_losses.append(train_loss.data[0])
-            loss_history.append(train_loss.data[0])
+            train_losses.append(train_loss.data.item())
+            loss_history.append(train_loss.data.item())
             
             # Prints mini-batch losses
-            print('Training: Batch {0}/{1}. Loss of {2:.4f}, cover loss of {3:.4f}, secret loss of {4:.4f}'.format(idx+1, len(train_loader), train_loss.data[0], train_loss_cover.data[0], train_loss_secret.data[0]))
+            print('Training: Batch {0}/{1}. Loss of {2:.4f}, cover loss of {3:.4f}, secret loss of {4:.4f}'.format(idx+1, len(train_loader), train_loss.data.item(), train_loss_cover.data.item(), train_loss_secret.data.item()))
     
         torch.save(net.state_dict(), MODELS_PATH+'Epoch N{}.pkl'.format(epoch+1))
         
@@ -64,3 +64,5 @@ def train_model(train_loader, beta, learning_rate):
                 epoch+1, num_epochs, mean_train_loss))
     
     return net, mean_train_loss, loss_history
+
+net, mean_train_loss, loss_history = train_model(train_loader, beta, learning_rate)

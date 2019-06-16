@@ -3,13 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import torch
+import torch.nn as nn
 import torchvision.transforms as transforms
-from torch import Variable
+from torch.autograd import Variable
 from torchvision import datasets, utils
 
 #hyper params
 num_epochs = 3
-batch_size = 2
+batch_size = 8
 learning_rate = 0.0001
 beta = 1
 
@@ -52,10 +53,11 @@ def imshow(img, idx, learning_rate, beta):
     plt.show()
     return
 
-def gaussian(tensor, mean=0, stddev=0.1):
+def gaussian(tensor, mean=0, stddev=0.1, gpu = True):
     '''Adds random noise to a tensor.'''
     
     noise = torch.nn.init.normal(torch.Tensor(tensor.size()), 0, 0.1)
+    if gpu: noise = noise.cuda()
     return Variable(tensor + noise)
 
 
@@ -66,7 +68,7 @@ train_loader = torch.utils.data.DataLoader(
         transforms.Compose([
         # transforms.Scale(256),
         # transforms.RandomCrop(224),
-        transforms.RandomResizedCrop(128, scale=1, ratio=1),
+        transforms.RandomResizedCrop(128, scale=(1,1), ratio=(1,1)),
         transforms.ToTensor(),
         transforms.Normalize(mean=mean,
         std=std)
@@ -78,8 +80,7 @@ test_loader = torch.utils.data.DataLoader(
         datasets.ImageFolder(
         TEST_PATH, 
         transforms.Compose([
-        transforms.Scale(256),
-        transforms.RandomCrop(224),
+        transforms.RandomResizedCrop(128, scale=1, ratio=1),
         transforms.ToTensor(),
         transforms.Normalize(mean=mean,
         std=std)
