@@ -35,14 +35,17 @@ class Net(nn.Module):
                 GenericLayer(3,50),
                 GenericLayer(150,50),
                 GenericLayer(150,50),
+                GenericLayer(150,50)
                 )
         self.hiding = nn.Sequential(
                 GenericLayer(153,50),
+                GenericLayer(150,50),
                 GenericLayer(150,50),
                 nn.Conv2d(150,3,kernel_size=1,padding=0)
                 )
         self.reveal = nn.Sequential(
                 GenericLayer(3,50),
+                GenericLayer(150,50),
                 GenericLayer(150,50),
                 nn.Conv2d(150,3,kernel_size=1,padding=0)
                 )
