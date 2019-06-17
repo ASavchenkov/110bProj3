@@ -26,7 +26,7 @@ mean = [0.485, 0.456, 0.406]
 
 TRAIN_PATH = './data/'
 VALID_PATH = './data/'
-TEST_PATH = './data/'
+TEST_PATH = './kodim/'
 
 def customized_loss(S_prime, C_prime, S, C, B):
     ''' Calculates loss specified on the paper.'''
